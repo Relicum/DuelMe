@@ -601,33 +601,35 @@ public class DuelManager {
 
         player.getInventory().clear(-1, -1);// clear their inventory completely
 
-        try {
-            ItemStack[] arm = playerData.getArmour();
-            ItemStack[] inv = playerData.getInventory();
-            Location loc = playerData.getLocaton();
-            Float saturation = playerData.getSaturation();
-            int foodLevel = playerData.getFoodLevel();
-            int expLevel = playerData.getEXPLevel();
-            double health = playerData.getHealth();
-
-            if (!this.isDeadPlayer(playerUUID)) {
-                player.teleport(loc);
-            }
-
-            if (plugin.isUsingSeperatedInventories()) {
-                player.getInventory().setContents(inv);
-                player.getInventory().setArmorContents(arm);
-            }
-            player.setSaturation(saturation);
-            player.setFoodLevel(foodLevel);
-            player.setLevel(expLevel);
-            player.setHealth(health);
-            Util.sendMsg(player, ChatColor.GREEN + "Your player data has been restored!");
-        } catch (Exception e) {
-            Util.sendMsg(player, ChatColor.RED + "There was an error restoring your player data!");
+        if(playerData != null) {
+                try {
+                    ItemStack[] arm = playerData.getArmour();
+                    ItemStack[] inv = playerData.getInventory();
+                    Location loc = playerData.getLocaton();
+                    Float saturation = playerData.getSaturation();
+                    int foodLevel = playerData.getFoodLevel();
+                    int expLevel = playerData.getEXPLevel();
+                    double health = playerData.getHealth();
+        
+                    if (!this.isDeadPlayer(playerUUID)) {
+                        player.teleport(loc);
+                    }
+        
+                    if (plugin.isUsingSeperatedInventories()) {
+                        player.getInventory().setContents(inv);
+                        player.getInventory().setArmorContents(arm);
+                    }
+                    player.setSaturation(saturation);
+                    player.setFoodLevel(foodLevel);
+                    player.setLevel(expLevel);
+                    player.setHealth(health);
+                    Util.sendMsg(player, ChatColor.GREEN + "Your player data has been restored!");
+                } catch (Exception e) {
+                    Util.sendMsg(player, ChatColor.RED + "There was an error restoring your player data!");
+                }
         }
-
-
+        
+        this.playerData.remove(playerData);
     }
 
     /**
@@ -655,8 +657,6 @@ public class DuelManager {
         if (arena.getPlayers().size() == 1) {
             im.rewardPlayer(arena);
         }
-
-
     }
 
     /**
