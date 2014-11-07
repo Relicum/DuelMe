@@ -1,6 +1,7 @@
 name: DuelMe
-version: 0.9.9 Beta
+version: ${project.version}
 author: teozfrank
+authors: [Relicum]
 description: allows players to duel each other in a controlled environment
 main: com.teozcommunity.teozfrank.duelme.main.DuelMe
 depend: [WorldEdit, Vault]

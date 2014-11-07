@@ -1,28 +1,28 @@
 package com.teozcommunity.teozfrank.duelme.events;
 
 /**
-        The MIT License (MIT)
+ The MIT License (MIT)
 
-        Copyright (c) 2014 teozfrank
+ Copyright (c) 2014 teozfrank
 
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-        furnished to do so, subject to the following conditions:
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
 
-        The above copyright notice and this permission notice shall be included in
-        all copies or substantial portions of the Software.
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
 
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-        THE SOFTWARE.
-*/
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ */
 
 import com.teozcommunity.teozfrank.duelme.main.DuelMe;
 import com.teozcommunity.teozfrank.duelme.mysql.FieldName;
@@ -71,14 +71,14 @@ public class PlayerEvents implements Listener {
         Player player = e.getPlayer();
         String playerName = player.getName();
 
-        if(player.hasPermission("duelme.admin.update.notify")) {
-            if(UpdateChecker.isUpdateAvailable() && plugin.getConfig().getBoolean("duelme.checkforupdates")) {
+        if (player.hasPermission("duelme.admin.update.notify")) {
+            if (UpdateChecker.isUpdateAvailable() && plugin.getConfig().getBoolean("duelme.checkforupdates")) {
                 Util.sendMsg(player, ChatColor.GREEN + "There is an update available for" +
                         " for this plugin get it on bukkit dev page: " +
                         ChatColor.AQUA + "http://dev.bukkit.org/bukkit-plugins/duelme/");
-              }
+            }
         }
-        
+
     }
 
 
@@ -90,15 +90,15 @@ public class PlayerEvents implements Listener {
         DuelManager dm = plugin.getDuelManager();
         FileManager fm = plugin.getFileManager();
 
-        if(!fm.isRightClickToDuelEnabled()){
+        if (!fm.isRightClickToDuelEnabled()) {
             return;
         }
 
-        if(entity instanceof Player){
+        if (entity instanceof Player) {
             Player target = (Player) entity;
-            if(player.isSneaking() && player.getItemInHand().equals(new ItemStack(Material.DIAMOND_SWORD))){//if the player is sneaking and has a diamond sword
-              dm.sendNormalDuelRequest(player , target.getName());//send a duel request
-              return;
+            if (player.isSneaking() && player.getItemInHand().equals(new ItemStack(Material.DIAMOND_SWORD))) {//if the player is sneaking and has a diamond sword
+                dm.sendNormalDuelRequest(player, target.getName());//send a duel request
+                return;
             }
         }
     }
@@ -108,7 +108,7 @@ public class PlayerEvents implements Listener {
         Player dueler = e.getPlayer();
         DuelManager dm = plugin.getDuelManager();
 
-        if(dm.isInDuel(dueler.getUniqueId())){
+        if (dm.isInDuel(dueler.getUniqueId())) {
             e.setCancelled(true);
         }
     }
@@ -117,11 +117,11 @@ public class PlayerEvents implements Listener {
     public void onPlayerDamageByFall(EntityDamageEvent e) {
         Entity entity = e.getEntity();
 
-        if(!(entity instanceof Player)) {
+        if (!(entity instanceof Player)) {
             return;
         }
 
-        if(e.getCause() != EntityDamageEvent.DamageCause.FALL) {
+        if (e.getCause() != EntityDamageEvent.DamageCause.FALL) {
             return;
         }
 
@@ -130,9 +130,9 @@ public class PlayerEvents implements Listener {
         String playerName = player.getName();
         UUID playerUUID = player.getUniqueId();
 
-        if(dm.isInDuel(playerUUID)) {//if the player is in a duel
+        if (dm.isInDuel(playerUUID)) {//if the player is in a duel
             DuelArena playersArena = dm.getPlayersArenaByUUID(playerUUID);
-            if(playersArena.getDuelState() == DuelState.STARTING) {//if the duel state is starting
+            if (playersArena.getDuelState() == DuelState.STARTING) {//if the duel state is starting
                 e.setCancelled(true); //cancel the event
             }
         }
@@ -142,51 +142,51 @@ public class PlayerEvents implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDeath(PlayerDeathEvent e) {
-       Player player = e.getEntity();
-       String playerName = player.getName();
-       UUID playerUUID = player.getUniqueId();
+        Player player = e.getEntity();
+        String playerName = player.getName();
+        UUID playerUUID = player.getUniqueId();
 
-       DuelManager dm = plugin.getDuelManager();
-       FileManager fm = plugin.getFileManager();
-       MySql mySql = plugin.getMySql();
+        DuelManager dm = plugin.getDuelManager();
+        FileManager fm = plugin.getFileManager();
+        MySql mySql = plugin.getMySql();
 
-       if(dm.isInDuel(playerUUID)){
-           dm.addDeadPlayer(playerUUID);
+        if (dm.isInDuel(playerUUID)) {
+            dm.addDeadPlayer(playerUUID);
 
-           if(fm.isMySqlEnabled()) {
-               mySql.addPlayerKillDeath(playerUUID, playerName, FieldName.DEATH);
-           }
+            if (fm.isMySqlEnabled()) {
+                mySql.addPlayerKillDeath(playerUUID, playerName, FieldName.DEATH);
+            }
 
-           if(e.getEntity().getKiller() instanceof Player){
-               Player killer = e.getEntity().getKiller();
-               String killerName = killer.getName();
-               if(fm.isMySqlEnabled()) {
-                   mySql.addPlayerKillDeath(playerUUID, killerName, FieldName.KILL);
-               }
+            if (e.getEntity().getKiller() instanceof Player) {
+                Player killer = e.getEntity().getKiller();
+                String killerName = killer.getName();
+                if (fm.isMySqlEnabled()) {
+                    mySql.addPlayerKillDeath(playerUUID, killerName, FieldName.KILL);
+                }
 
-               if(!fm.isDropItemsOnDeathEnabled()) {
-                   if(plugin.isDebugEnabled()) {
-                       SendConsoleMessage.debug("Item drops disabled, clearing.");
-                   }
-                   e.getDrops().clear();
-               }
+                if (!fm.isDropItemsOnDeathEnabled()) {
+                    if (plugin.isDebugEnabled()) {
+                        SendConsoleMessage.debug("Item drops disabled, clearing.");
+                    }
+                    e.getDrops().clear();
+                }
 
-               if(!fm.isDeathMessagesEnabled()){
-                   e.setDeathMessage("");
-                   return;
-               }
-               e.setDeathMessage(ChatColor.GOLD + "[DuelMe] " + ChatColor.AQUA + player.getName() + ChatColor.RED + " was killed in a duel by "
-                       + ChatColor.AQUA + killer.getName());
-           }  else {
-               if(!fm.isDeathMessagesEnabled()){
-                   e.setDeathMessage("");
-                   return;
-               }
-               e.setDeathMessage(ChatColor.GOLD + "[DuelMe] " + ChatColor.AQUA + player.getName() + ChatColor.RED + " was killed in a duel!");
-           }
-           dm.endDuel(player);
+                if (!fm.isDeathMessagesEnabled()) {
+                    e.setDeathMessage("");
+                    return;
+                }
+                e.setDeathMessage(ChatColor.GOLD + "[DuelMe] " + ChatColor.AQUA + player.getName() + ChatColor.RED + " was killed in a duel by "
+                        + ChatColor.AQUA + killer.getName());
+            } else {
+                if (!fm.isDeathMessagesEnabled()) {
+                    e.setDeathMessage("");
+                    return;
+                }
+                e.setDeathMessage(ChatColor.GOLD + "[DuelMe] " + ChatColor.AQUA + player.getName() + ChatColor.RED + " was killed in a duel!");
+            }
+            dm.endDuel(player);
 
-       }
+        }
 
     }
 
@@ -199,9 +199,9 @@ public class PlayerEvents implements Listener {
         DuelManager dm = plugin.getDuelManager();
         FileManager fm = plugin.getFileManager();
 
-        if(dm.isDeadPlayer(playerUUID)){
+        if (dm.isDeadPlayer(playerUUID)) {
             PlayerData playerData = dm.getPlayerDataByUUID(playerUUID);
-            e.setRespawnLocation(playerData.getLocaton());
+            e.setRespawnLocation(playerData.getLocation());
             dm.restorePlayerData(player);
             dm.removedDeadPlayer(playerUUID);
         }
@@ -215,7 +215,7 @@ public class PlayerEvents implements Listener {
 
         DuelManager dm = plugin.getDuelManager();
 
-        if(dm.isInDuel(playerUUID)){
+        if (dm.isInDuel(playerUUID)) {
             dm.endDuel(player);
         }
     }
@@ -255,7 +255,7 @@ public class PlayerEvents implements Listener {
             }
 
             if (loc.getBlockX() != locations.get(player).getBlockX() || loc.getBlockZ() != locations.get(player).getBlockZ()) {
-                if(plugin.isDebugEnabled()) {
+                if (plugin.isDebugEnabled()) {
                     SendConsoleMessage.debug("Frozen player in duel moved, teleporting back!");
                 }
 

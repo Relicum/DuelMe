@@ -7,4 +7,12 @@ Please submit tickets on bukkit dev website: http://dev.bukkit.org/bukkit-plugin
 
 Latest download availble here: http://dev.bukkit.org/bukkit-plugins/duelme/
 
-Pull requests will be accepted if coded efficently and fully commented, thanks!
+Pull requests will be accepted if coded efficiently and fully commented, thanks!
+
+Spigot 1.8 Test Version
+===
+This version is a development build upgrading it to run on the latest Patched Spigot.
+
+The updates are being done by @Relicum. Current version 1.0.3-SNAPSHOT .
+
+No issues at all to report from the recompile to run on spigot 1.8, with both Java 7 and Java 8

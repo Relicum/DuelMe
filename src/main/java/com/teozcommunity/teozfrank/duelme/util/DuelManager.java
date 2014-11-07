@@ -1,38 +1,36 @@
 package com.teozcommunity.teozfrank.duelme.util;
 
 /**
-        The MIT License (MIT)
+ The MIT License (MIT)
 
-        Copyright (c) 2014 teozfrank
+ Copyright (c) 2014 teozfrank
 
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-        furnished to do so, subject to the following conditions:
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
 
-        The above copyright notice and this permission notice shall be included in
-        all copies or substantial portions of the Software.
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
 
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-        THE SOFTWARE.
-*/
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ */
 
 import com.teozcommunity.teozfrank.duelme.main.DuelMe;
 import com.teozcommunity.teozfrank.duelme.threads.StartDuelThread;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -189,7 +187,7 @@ public class DuelManager {
      * @param playerUUID the players name
      */
     public void addFrozenPlayer(UUID playerUUID) {
-        if(plugin.isDebugEnabled()) {
+        if (plugin.isDebugEnabled()) {
             SendConsoleMessage.debug("frozen player added: " + playerUUID);
         }
         this.frozenPlayerUUIDs.add(playerUUID);
@@ -202,7 +200,7 @@ public class DuelManager {
      * @param targetUUID the duel target
      */
     public void addFrozenPlayer(UUID senderUUID, UUID targetUUID) {
-        if(plugin.isDebugEnabled()) {
+        if (plugin.isDebugEnabled()) {
             SendConsoleMessage.debug("frozen sender added: " + senderUUID);
             SendConsoleMessage.debug("frozen target added: " + targetUUID);
         }
@@ -604,7 +602,7 @@ public class DuelManager {
         try {
             ItemStack[] arm = playerData.getArmour();
             ItemStack[] inv = playerData.getInventory();
-            Location loc = playerData.getLocaton();
+            Location loc = playerData.getLocation();
             Float saturation = playerData.getSaturation();
             int foodLevel = playerData.getFoodLevel();
             int expLevel = playerData.getEXPLevel();
@@ -645,7 +643,7 @@ public class DuelManager {
         DuelArena arena = this.getPlayersArenaByUUID(playerUUID);
         arena.removePlayer(playerUUID);
 
-        if(player.isDead()) {
+        if (player.isDead()) {
             this.addDeadPlayer(playerUUID);
         } else {
             this.restorePlayerData(player);
@@ -685,7 +683,7 @@ public class DuelManager {
                 String playerName = playerOut.getName();
                 this.restorePlayerData(playerOut);
                 Util.sendMsg(playerOut, ChatColor.RED + "Duel was forcefully cancelled!");
-                if(arena.hasBet()) {
+                if (arena.hasBet()) {
                     double betAmount = arena.getBetAmount();
                     double refundAmount = betAmount / 2;
                     plugin.getEconomy().depositPlayer(playerName, refundAmount);

@@ -2,4 +2,4 @@
 configversion: 1.0
 messages:
     general:
-        prefix: '&6[DuelMe]'
+        prefix: '&5[&bDuelMe-SPIGOT&5]'

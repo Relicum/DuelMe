@@ -25,20 +25,15 @@ package com.teozcommunity.teozfrank.duelme.util;
 */
 
 import com.teozcommunity.teozfrank.duelme.main.DuelMe;
-import com.teozcommunity.teozfrank.duelme.threads.StartDuelThread;
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
+//todo.me Create a separate message managing class that stems from an Interface
 public class Util {
 
     /**
@@ -62,16 +57,17 @@ public class Util {
         this.rand = new Random();
     }
 
-
+    //todo.me move the actual prefix into this class and remove static reference
     /**
     * Method to broadcast a plugin message to all online players
     * @param message message to send to all players
     */
     public static void broadcastMessage(String message) {
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            Util.sendMsg(p, message);
-        }
+
+        Bukkit.broadcastMessage(DuelMe.getPrefix() + " " + message);
+
     }
+
 
     /**
      * sends a message to the recipient with the plugin prefix
@@ -148,31 +144,21 @@ public class Util {
         }
     }
 
+
+    //todo.me This really should be moved into the Dual Arena class so each arena has its only checker.
     /**
      * check to see if a given location with within a given region
+     * <p>This presumes loc1 is the min point and loc2 is the max point.
+     *
      * @param playerLoc player or entity location
      * @param loc1 position 1 of the region
      * @param loc2 position 2 of the region
      * @return return true if the location is within the region, false if not
      */
     public static boolean isInRegion(Location playerLoc, Location loc1, Location loc2) {
-        double[] dim = new double[2];
 
-        dim[0] = loc1.getX();
-        dim[1] = loc2.getX();
-        Arrays.sort(dim);
-        if(playerLoc.getX() > dim[1] || playerLoc.getX() < dim[0]){
-            return false;
-        }
+        return playerLoc.toVector().isInAABB(loc1.toVector(), loc2.toVector());
 
-        dim[0] = loc1.getZ();
-        dim[1] = loc2.getZ();
-        Arrays.sort(dim);
-        if(playerLoc.getZ() > dim[1] || playerLoc.getZ() < dim[0]){
-            return false;
-        }
-
-        return true;
     }
 
     /**

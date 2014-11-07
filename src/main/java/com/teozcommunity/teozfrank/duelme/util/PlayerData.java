@@ -25,16 +25,20 @@ package com.teozcommunity.teozfrank.duelme.util;
 */
 
 import org.bukkit.Location;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.UUID;
+import java.util.*;
 
-public class PlayerData {
+//todo.me impliment ConfigurationSerializable so this can be quick written and read from file
+@SerializableAs("PlayerData")
+public class PlayerData implements ConfigurationSerializable {
 
     private UUID playerUUID;
     private ItemStack[] armour;
     private ItemStack[] inventory;
-    private Location locaton;
+    private SerializedLocation location;
     private Float saturation;
     private int foodLevel;
     private int expLevel;
@@ -45,12 +49,13 @@ public class PlayerData {
      this.playerUUID = playerUUIDIn;
      this.armour = armourIn;
      this.inventory = inventoryIn;
-     this.locaton = locationIn;
+        this.location = new SerializedLocation(locationIn);
      this.saturation = saturationIn;
      this.foodLevel = foodLevelIn;
      this.expLevel = expLevelIn;
      this.health = healthIn;
     }
+
 
     public UUID getUUID() {
         return playerUUID;
@@ -76,12 +81,12 @@ public class PlayerData {
         this.inventory = inventory;
     }
 
-    public Location getLocaton() {
-        return locaton;
+    public Location getLocation() {
+        return location.getLocation();
     }
 
-    public void setLocaton(Location locaton) {
-        this.locaton = locaton;
+    public void setLocation(Location location) {
+        this.location = new SerializedLocation(location);
     }
 
     public Float getSaturation() {
@@ -114,5 +119,63 @@ public class PlayerData {
 
     public void setHealth(double health) {
         this.health = health;
+    }
+
+    /**
+     * Gets version of the serialized object.
+     *
+     * @return the version
+     */
+    public int getVersion() {
+        return 1;
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("uuid", playerUUID.toString());
+        map.put("armour", armour);
+        map.put("inventory", inventory);
+        map.put("location", location);
+        map.put("saturation", saturation);
+        map.put("foodLevel", foodLevel);
+        map.put("exp", expLevel);
+        map.put("health", health);
+
+        return map;
+    }
+
+    @SuppressWarnings("all")
+    public static PlayerData deserialize(Map<String, Object> map) {
+
+        Object idObj = map.get("uuid"), satObj = map.get("saturation"), foodObj = map.get("foodLevel"), xPobj = map.get("exp"), helObj = map.get("health");
+
+        ItemStack[] ar = ((ArrayList<ItemStack>) map.get("armour")).toArray(new ItemStack[0]);
+        ItemStack[] inv = ((ArrayList<ItemStack>) map.get("inventory")).toArray(new ItemStack[0]);
+        SerializedLocation loc = (SerializedLocation) map.get("location");
+
+        if (idObj == null || satObj == null || foodObj == null || xPobj == null || helObj == null || loc == null) {
+            throw new RuntimeException("Some thing is null deserialzing playerdata");
+        }
+
+        return new PlayerData(UUID.fromString((String) idObj), ar, inv, loc.getLocation(), ((Double) satObj).floatValue(), (Integer) foodObj, (Integer) xPobj, (Double) helObj);
+
+    }
+
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("PlayerData{");
+        sb.append("playerUUID=").append(playerUUID);
+        sb.append(", armour=").append(armour == null ? "null" : Arrays.asList(armour).toString());
+        sb.append(", inventory=").append(inventory == null ? "null" : Arrays.asList(inventory).toString());
+        sb.append(", location=").append(location);
+        sb.append(", saturation=").append(saturation);
+        sb.append(", foodLevel=").append(foodLevel);
+        sb.append(", expLevel=").append(expLevel);
+        sb.append(", health=").append(health);
+        sb.append(", version=").append(getVersion());
+        sb.append('}');
+        return sb.toString();
     }
 }
