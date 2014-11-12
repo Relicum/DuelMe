@@ -24,21 +24,40 @@ package com.teozcommunity.teozfrank.duelme.main;
  THE SOFTWARE.
  */
 
+import com.google.common.collect.ImmutableList;
+import com.relicum.dual.Commands.Admin.LobbyTp;
+import com.relicum.dual.Commands.Admin.SetLobby;
+import com.relicum.dual.Commands.Admin.Status;
+import com.relicum.dual.Commands.Join;
+import com.relicum.dual.Commands.Leave;
+import com.relicum.dual.Configuration.Settings;
+import com.relicum.dual.lobby.Lobby;
+import com.relicum.ipsum.Commands.CommandRegister;
+import com.relicum.ipsum.Effect.Game.Region;
+import com.relicum.ipsum.Effect.Game.SimpleArena;
+import com.relicum.ipsum.Location.SpawnPoint;
 import com.teozcommunity.teozfrank.duelme.commands.DuelAdminExecutor;
 import com.teozcommunity.teozfrank.duelme.commands.DuelExecutor;
 import com.teozcommunity.teozfrank.duelme.events.PlayerEvents;
 import com.teozcommunity.teozfrank.duelme.mysql.MySql;
 import com.teozcommunity.teozfrank.duelme.util.*;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.StringUtil;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DuelMe extends JavaPlugin {
+
+    private static DuelMe instance;
 
     /**
      * duelmanager class
@@ -69,9 +88,18 @@ public class DuelMe extends JavaPlugin {
 
     private int errorCount;
 
+    private Settings settings = null;
+    CommandRegister register;
+
+    private List<String> ALEVEL1;
+    private List<String> PLEVEL1;
+
     public static String prefix;
 
+    private Lobby lobby = null;
+
     public DuelMe() {
+
         this.errorCount = 0;
     }
 
@@ -81,15 +109,48 @@ public class DuelMe extends JavaPlugin {
 
         ConfigurationSerialization.registerClass(SerializedLocation.class);  //Register deserializers
         ConfigurationSerialization.registerClass(PlayerData.class);
+        ConfigurationSerialization.registerClass(SpawnPoint.class);
+        ConfigurationSerialization.registerClass(SimpleArena.class);
+        ConfigurationSerialization.registerClass(Region.class);
+        ConfigurationSerialization.registerClass(Lobby.class);
+        instance = this;
 
+
+        getConfig().options().copyDefaults(true);
+        saveDefaultConfig();
         SendConsoleMessage.info("Enabling.");
+        SendConsoleMessage.info("Registering Commands");
+        register = new CommandRegister(this);
+        getCommand("1v1").setExecutor(register);
+        getCommand("1v1").setTabCompleter(this);
+        getCommand("da").setExecutor(register);
+        getCommand("da").setTabCompleter(this);
+        register.register(new Leave(this));
+        register.register(new Status(this));
+        register.register(new LobbyTp(this));
+        register.register(new SetLobby(this));
+        register.register(new Join(this));
+        ALEVEL1 = ImmutableList.of("setlobby", "status", "lobbytp");
+        PLEVEL1 = ImmutableList.of("join", "leave");
+
+        register.endRegistration();
+
+
+        settings = new Settings(this, "Settings");
+
+        settings.doInit();
+
+
+        startChecks();
+
+
         version = this.getDescription().getVersion();
         this.fileManager = new FileManager(this);
         prefix = getFileManager().getPrefix();
         this.setupYMLs();
-        //this.checkForUpdates();
-        //this.submitStats();
-        this.setupDependencies();
+
+        setupCommands();
+
         this.setupEconomy();
         this.duelManager = new DuelManager(this);
         new PlayerEvents(this);
@@ -104,10 +165,85 @@ public class DuelMe extends JavaPlugin {
     @Override
     public void onDisable() {
         SendConsoleMessage.info("Disabling.");
-        this.endAllRunningDuels();
-        this.getFileManager().saveDuelArenas();
+        SendConsoleMessage.info("Saving Settings");
+        this.settings.saveConfigs();
+        register.destroy();
+        if (settings.getEnable()) {
+            this.endAllRunningDuels();
+            this.getFileManager().saveDuelArenas();
+            saveConfig();
+        }
     }
 
+    public static DuelMe getInstance() {
+        return instance;
+    }
+
+    public Settings getSettings() {
+
+        return settings;
+    }
+
+    public Lobby getLobby() {
+
+        return lobby;
+    }
+
+    private void startChecks() {
+
+        if (!settings.getEnable())
+            getServer().getPluginManager().disablePlugin(this);
+
+        if (settings.getLobbyReady() && getConfig().contains("lobby.settings")) {
+            this.lobby = (Lobby) getConfig().get("lobby.settings");
+            SendConsoleMessage.info("Lobby has been loaded");
+        }
+    }
+
+    private void setupCommands() {
+/*      this.commands = new CommandsManager<CommandSender>() {
+          @Override
+          public boolean hasPermission(CommandSender sender, String s) {
+              return sender.hasPermission(s);
+          }
+      };
+
+        CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this,this.commands);*/
+
+
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+
+        if (cmd.getName().contains("1v1") || cmd.getName().equalsIgnoreCase("da")) {
+
+            sender.sendMessage(ChatColor.GREEN + "Hello from " + cmd.getLabel() + " name is " + cmd.getName() + " There is " + args.length);
+            return true;
+        }
+
+/*        try {
+            this.commands.execute(cmd.getName(), args, sender, sender);
+        } catch (CommandPermissionsException e) {
+            sender.sendMessage(ChatColor.RED + "You don't have permission.");
+        } catch (MissingNestedCommandException e) {
+            sender.sendMessage(ChatColor.RED + e.getUsage());
+        } catch (CommandUsageException e) {
+            sender.sendMessage(ChatColor.RED + e.getMessage());
+            sender.sendMessage(ChatColor.RED + e.getUsage());
+        } catch (WrappedCommandException e) {
+            if (e.getCause() instanceof NumberFormatException) {
+                sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
+            } else {
+                sender.sendMessage(ChatColor.RED + "An error has occurred. See console.");
+                e.printStackTrace();
+            }
+        } catch (CommandException e) {
+            sender.sendMessage(ChatColor.RED + e.getMessage());
+        }*/
+
+        return true;
+    }
     private void endAllRunningDuels() {
         DuelManager dm = this.getDuelManager();
         if (dm.getDuelArenas().size() == 0) {//if there are no duel arenas
@@ -206,19 +342,6 @@ public class DuelMe extends JavaPlugin {
     }
 
     /**
-     * sets up the plugin main dependencies such as WorldEdit
-     * disables the plugin if the required dependency is not present
-     */
-    private void setupDependencies() {
-        if (this.getServer().getPluginManager().getPlugin("WorldEdit") != null) {
-            SendConsoleMessage.info("WorldEdit found!");
-        } else {
-            SendConsoleMessage.warning("WorldEdit dependency not found, plugin disabled!");
-            Bukkit.getPluginManager().disablePlugin(this);
-        }
-    }
-
-    /**
      * get the duel manager object
      *
      * @return duel manager object
@@ -284,5 +407,22 @@ public class DuelMe extends JavaPlugin {
     public static String getPrefix() {
         return prefix;
     }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command cmd, String s, String[] args) {
+        if (args.length == 1) {
+            if (cmd.getName().equalsIgnoreCase("da")) {
+                return StringUtil.copyPartialMatches(args[0], ALEVEL1, new ArrayList<>(ALEVEL1.size()));
+            }
+            if (cmd.getName().equalsIgnoreCase("1v1")) {
+                return StringUtil.copyPartialMatches(args[0], PLEVEL1, new ArrayList<>(PLEVEL1.size()));
+            }
+
+        }
+
+        return Collections.emptyList();
+    }
+
+
 
 }

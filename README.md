@@ -13,6 +13,6 @@ Spigot 1.8 Test Version
 ===
 This version is a development build upgrading it to run on the latest Patched Spigot.
 
-The updates are being done by @Relicum. Current version 1.0.3-SNAPSHOT .
+The updates are being done by @Relicum. Current version 1.0.4-SNAPSHOT .
 
 No issues at all to report from the recompile to run on spigot 1.8, with both Java 7 and Java 8

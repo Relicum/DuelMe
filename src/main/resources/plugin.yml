@@ -4,7 +4,7 @@ author: teozfrank
 authors: [Relicum]
 description: allows players to duel each other in a controlled environment
 main: com.teozcommunity.teozfrank.duelme.main.DuelMe
-depend: [WorldEdit, Vault]
+depend: [Ipsum,Yamler,WorldEdit, Vault]
 commands:
     duel:
         description: Access to duel commands
@@ -15,13 +15,25 @@ commands:
         description: Access to dueladmin commands
         permission: duelme.admin.info
         permission-message: You do not have permission for this command!
-        useage: /<command>
+        usage: /<command>
+    1v1:
+        description: Main 1v1 sub command
+        permission: dual.player
+        usage: /<command>
+    da:
+        description: Main 1v1 Admin Command
+        permission: dual.admin
+        usage: /<command>
+        aliases: [dualadmin]
+
 permissions:
     duelme.*:
         description: Gives access to all toolkit permissions
         children:
             duelme.player.*: true
             duelme.admin.*: true
+            dual.player.*: true
+            dual.admin.*: true
     duelme.admin.*:
         description: Gives access to all toolkit staff commands
         children:
