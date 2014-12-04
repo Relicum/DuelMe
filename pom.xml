@@ -10,17 +10,11 @@
     <description>duelme a plugin to allow players to pvp, in a controlled area</description>
 
     <properties>
-        <bukkit.version>1.7.10-R0.1-SNAPSHOT</bukkit.version>
         <worldedit.version>5.6.3</worldedit.version>
-        <libsdisguises.version>8.2.6-SNAPSHOT</libsdisguises.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <repositories>
-        <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public/</url>
-        </repository>
         <repository>
             <id>sk89q-repo</id>
             <url>http://maven.sk89q.com/repo/</url>
@@ -38,20 +32,36 @@
             <name>Comphenix Repository</name>
             <url>http://repo.comphenix.net/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>confuser-repo</id>
+            <url>http://ci.frostcast.net/plugin/repository/everything/</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>com.relicum</groupId>
             <artifactId>Ipsum</artifactId>
-            <version>1.0.42-SNAPSHOT</version>
+            <version>1.0.46-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>${bukkit.version}</version>
+            <version>1.8-R0.1-SNAPSHOT</version>
             <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.8-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -68,13 +78,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>LibsDisguises</groupId>
-            <artifactId>LibsDisguises</artifactId>
-            <version>${libsdisguises.version}</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
             <version>1.4.1</version>
@@ -88,7 +91,19 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
+            <groupId>com.relicum</groupId>
+            <artifactId>TitleApi</artifactId>
+            <version>1.0.5-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.dablakbandit</groupId>
+            <artifactId>CustomEntitiesAPI</artifactId>
+            <version>1.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+        <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.14.4</version>
             <scope>provided</scope>
@@ -131,7 +146,7 @@
                 <version>2.4</version>
                 <configuration>
                     <finalName>${project.name}-${project.version}</finalName>
-                    <outputDirectory>G:\Users\Relicum\IdeaProjects\Restrict\dist\plugins</outputDirectory>
+                    <outputDirectory>G:\Users\Relicum\Desktop\MCTest\plugins</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>

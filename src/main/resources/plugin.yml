@@ -4,7 +4,7 @@ author: teozfrank
 authors: [Relicum]
 description: allows players to duel each other in a controlled environment
 main: com.teozcommunity.teozfrank.duelme.main.DuelMe
-depend: [Ipsum,Yamler,WorldEdit, Vault]
+depend: [Ipsum,Yamler,WorldEdit, Vault,TitleApi,CustomEntitiesAPI]
 commands:
     duel:
         description: Access to duel commands

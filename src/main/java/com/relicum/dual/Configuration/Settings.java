@@ -45,7 +45,7 @@ public class Settings extends Config {
     @Getter
     @Setter
     @Path("duelme.defaults.joinBySign")
-    private Boolean joinBySign = true;
+    private Boolean joinBySign = false;
     @Getter
     @Setter
     @Path("duelme.defaults.joinByCmd")
@@ -57,6 +57,24 @@ public class Settings extends Config {
 
     @Getter
     @Setter
+    @Comments({"Auto Join will auto join then to the lobby on login", "This is used if the server is dedicated to the gamemode"})
+    @Path("duelme.defaults.autoJoin")
+    private Boolean autoJoin = false;
+
+    @Getter
+    @Setter
+    @Comments({"Set to true to save a players inventory", "before joining and restoring it when they leave"})
+    @Path("duelme.defaults.saveInv")
+    private Boolean saveInv = true;
+
+    @Getter
+    @Setter
+    @Comments({"Should we save players settings and inventory", "To hard disk in case of server crashes"})
+    @Path("duelme.defaults.saveInvToDisk")
+    private Boolean saveInvToDisk = true;
+
+    @Getter
+    @Setter
     @Path("duelme.defaults.adminMode")
     private Boolean adminMode = false;
 
@@ -64,6 +82,12 @@ public class Settings extends Config {
     @Setter
     @Path("duelme.defaults.titleOnJoin")
     private Boolean titleOnJoin = false;
+
+    @Getter
+    @Setter
+    @Comments({"When a player leaves 1v1 return them to", "the same location that they joined from.", "If false will return them to the current world spawn"})
+    @Path("duelme.defaults.lastDestination")
+    private Boolean lastDestination = true;
 
     @Getter
     @Setter

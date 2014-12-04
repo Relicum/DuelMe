@@ -1,28 +1,28 @@
 package com.teozcommunity.teozfrank.duelme.util;
 
 /**
-        The MIT License (MIT)
+ The MIT License (MIT)
 
-        Copyright (c) 2014 teozfrank
+ Copyright (c) 2014 teozfrank
 
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-        furnished to do so, subject to the following conditions:
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
 
-        The above copyright notice and this permission notice shall be included in
-        all copies or substantial portions of the Software.
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
 
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-        THE SOFTWARE.
-*/
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ */
 
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -32,7 +32,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 //todo.me impliment ConfigurationSerializable so this can be quick written and read from file
-@SerializableAs("PlayerData")
+@SerializableAs("Player")
 public class PlayerData implements ConfigurationSerializable {
 
     private UUID playerUUID;
@@ -46,14 +46,14 @@ public class PlayerData implements ConfigurationSerializable {
 
     public PlayerData(UUID playerUUIDIn, ItemStack[] armourIn, ItemStack[] inventoryIn, Location locationIn,
                       Float saturationIn, int foodLevelIn, int expLevelIn, double healthIn) {
-     this.playerUUID = playerUUIDIn;
-     this.armour = armourIn;
-     this.inventory = inventoryIn;
+        this.playerUUID = playerUUIDIn;
+        this.armour = armourIn;
+        this.inventory = inventoryIn;
         this.location = new SerializedLocation(locationIn);
-     this.saturation = saturationIn;
-     this.foodLevel = foodLevelIn;
-     this.expLevel = expLevelIn;
-     this.health = healthIn;
+        this.saturation = saturationIn;
+        this.foodLevel = foodLevelIn;
+        this.expLevel = expLevelIn;
+        this.health = healthIn;
     }
 
 
@@ -165,7 +165,7 @@ public class PlayerData implements ConfigurationSerializable {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("PlayerData{");
+        final StringBuffer sb = new StringBuffer("Player{");
         sb.append("playerUUID=").append(playerUUID);
         sb.append(", armour=").append(armour == null ? "null" : Arrays.asList(armour).toString());
         sb.append(", inventory=").append(inventory == null ? "null" : Arrays.asList(inventory).toString());
